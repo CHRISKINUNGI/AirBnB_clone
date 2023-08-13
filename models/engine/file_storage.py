@@ -35,7 +35,6 @@ class FileStorage:
         """
         serialized_data = {key: obj.to_dict() for key,
                            obj in self.__objects.items()}
-        print("This is the data: ", serialized_data)
         with open(self.__file_path, 'w') as file:
             json.dump(serialized_data, file)
 
