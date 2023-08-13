@@ -6,7 +6,6 @@
 """
 import json
 import os
-#from models.base_model import BaseModel
 
 
 class FileStorage:
@@ -44,7 +43,7 @@ class FileStorage:
             with instances
         """
         if os.path.exists(self.__file_path):
-            with open(self.__file_path, 'r', encoding = 'utf-8') as file:
+            with open(self.__file_path, 'r', encoding='utf-8') as file:
                 data = json.load(file)
                 for key, value in data.items():
                     class_name, obj_id = key.split('.')
