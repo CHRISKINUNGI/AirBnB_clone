@@ -6,6 +6,7 @@
 """
 import json
 import os
+#from models.base_model import BaseModel
 
 
 class FileStorage:
@@ -34,8 +35,9 @@ class FileStorage:
         """
         serialized_data = {key: obj.to_dict() for key,
                            obj in self.__objects.items()}
+        print("This is the data: ", serialized_data)
         with open(self.__file_path, 'w') as file:
-            file.write(json.dumps(serialized_data))
+            json.dump(serialized_data, file)
 
     def reload(self):
         """
@@ -47,6 +49,8 @@ class FileStorage:
                 data = json.load(file)
                 for key, value in data.items():
                     class_name, obj_id = key.split('.')
-                    obj_cls = globals()[class_name]
+                    module_name = "models.base_model"
+                    module = __import__(module_name, fromlist=[class_name])
+                    obj_cls = getattr(module, class_name)
                     instance = obj_cls(**value)
                     self.__objects[key] = instance
