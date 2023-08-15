@@ -5,7 +5,7 @@
     classes
 """
 import uuid
-from datetime import datetime
+import datetime
 from models import storage
 
 
@@ -28,15 +28,26 @@ class BaseModel:
                 be updated every time you change your object
 
         """
-        if kwargs is not None:
-            self.id = str(uuid.uuid4())
-            self.created_at = datetime.now()
-            self.updated_at = datetime.now()
-            storage.new(self)
-        else:
+
+        self.id = str(uuid.uuid4())
+        self.created_at = datetime.datetime.now()
+        self.updated_at = datetime.datetime.now()
+
+        if kwargs:
             for key, value in kwargs.items():
                 if key != '__class__':
-                    setatrr(self, key, value)
+                    if key == 'created_at':
+                        date_format = '%Y-%m-%dT%H:%M:%S.%f'
+                        self.created_at = datetime.datetime.strptime(value,
+                                                                     date_format)
+                    elif key == 'updated_at':
+                        date_format = '%Y-%m-%dT%H:%M:%S.%f'
+                        self.updated_at = datetime.datetime.strptime(value,
+                                                                     date_format)
+                    else:
+                        setattr(self, key, value)
+        else:
+            storage.new(self)
 
     def __str__(self):
         """
@@ -51,7 +62,7 @@ class BaseModel:
              updates the public instance attribute updated_at
              with the current datetime
         """
-        self.updated_at = datetime.now()
+        self.updated_at = datetime.datetime.now()
         storage.save()
 
     def to_dict(self):
