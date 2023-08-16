@@ -36,9 +36,11 @@ class HBNBCommand(cmd.Cmd):
             saves it (to the JSON file) and prints
             the id. Ex: $ create BaseModel
         """
-        if line is None:
+        line = line.split()
+        len_line = len(line)
+        if len_line == 0:
             print("** class name missing **")
-        elif line != "BaseModel":
+        elif line[0] != "BaseModel":
             print("** class doesn't exist **")
         else:
             my_object = BaseModel()
