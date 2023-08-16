@@ -104,13 +104,13 @@ class HBNBCommand(cmd.Cmd):
         """
         line = line.split()
         len_line = len(line)
-        if len_line == 0:
+        if len_line == 1 and line[0] != "BaseModel":
+            print("** class doesn't exist **")
+        else:
             my_list = []
             for obj in storage.all().values():
                 my_list.append(str(obj))
             print(my_list)
-        if line != "BaseModel":
-            print("** class doesn't exist **")
 
     def do_update(self, line):
         """
