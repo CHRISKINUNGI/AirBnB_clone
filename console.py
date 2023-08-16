@@ -48,7 +48,7 @@ class HBNBCommand(cmd.Cmd):
     def do_show(self, line):
         """
            Prints the string representation of an
-           instance based on the class name and 
+           instance based on the class name and
            id. Ex: $ show BaseModel 1234-1234-1234
         """
         line = line.split()
@@ -67,7 +67,7 @@ class HBNBCommand(cmd.Cmd):
                     print(str(obj))
                     obj_found = True
                     break
-            if obj_found == False:
+            if obj_found is False:
                 print("** no instance found **")
 
     def do_destroy(self, line):
@@ -76,13 +76,71 @@ class HBNBCommand(cmd.Cmd):
            name and id (save the change
            into the JSON file).
         """
-        if line is None:
+        line = line.split()
+        len_line = len(line)
+        if len_line == 0:
             print("** class name missing **")
-        elif line != "my_object":
+        elif line[0] != "BaseModel":
             print("** class doesn't exist **")
-        elif my_object.id is None:
+        elif len_line == 1:
             print("** instance id missing **")
+        else:
+            storage.reload()
+            obj_found = False
+            for obj in storage.all().values():
+                if obj.id == line[1]:
+                    my_line = "{}.{}".format(line[0], line[1])
+                    del storage.all()[my_line]
+                    storage.save()
+                    obj_found = True
+                    break
+            if obj_found is False:
+                print("** no instance found **")
 
+    def do_all(self, line):
+        """
+           Prints all string representation of all instances based or
+           not on the class name
+        """
+        line = line.split()
+        len_line = len(line)
+        if len_line == 0:
+            my_list = []
+            for obj in storage.all().values():
+                my_list.append(str(obj))
+            print(my_list)
+        if line != "BaseModel":
+            print("** class doesn't exist **")
+
+    def do_update(self, line):
+        """
+           Updates an instance based on the class name and id by adding
+           or updating attribute (save the change into the JSON file)
+           update <class name> <id> <attribute name> "<attribute value>"
+        """
+        line = line.split()
+        len_line = len(line)
+        if len_line == 0:
+            print("** class name missing **")
+        elif line[0] != "BaseModel":
+            print("** class doesn't exist **")
+        elif len_line == 1:
+            print("** instance id missing **")
+        elif len_line == 2:
+            print("** attribute name missing **")
+        elif len_line == 3:
+            print("** value missing **")
+        else:
+            storage.reload()
+            obj_found = False
+            for obj in storage.all().values():
+                if obj.id == line[1]:
+                    obj_found = True
+                    setattr(obj, line[2], line[3])
+                    storage.save()
+                    break
+            if obj_found is False:
+                print("** no instance found **")
 
 
 
