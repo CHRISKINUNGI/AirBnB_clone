@@ -6,6 +6,7 @@
 """
 import json
 import os
+classes = {}
 
 
 class FileStorage:
